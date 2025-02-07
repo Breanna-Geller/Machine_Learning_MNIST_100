@@ -1,0 +1,68 @@
+# Breanna Geller 5006089018
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+
+file = 'Datasets/MNIST_100.csv'
+MNIST = pd.read_csv(file)
+
+
+#   Task 1: Visualize and interpret the MNIST data using PCA. Reduce the data dimension to two or three
+#   and plot the data of reduced dimension. Must plot all the data of ten groups (0 to 9). (40 points)
+
+Y=MNIST.iloc[:,0]
+X=MNIST.drop('label', axis=1)
+#print(X.shape)
+#print(Y.shape)
+#   Reduce the data dimension to two
+pca = PCA(n_components=2)
+#   Fit to the PCA model
+pca.fit(X)
+#   Transform the data to two dimensions
+X_pca = pca.transform(X)
+#  Plot the data
+plt.plot(X_pca[:,0], X_pca[:,1], 'ro', label='0')
+for i in range(len(Y)):
+    plt.text(X_pca[i:i+1,0], X_pca[i:i+1,1], Y[i], color='black')
+plt.show()
+
+#   Task 2: Visualize and interpret the columns of K, M, and N in the housing data using Boxplot or Violin
+#   Plot. The first column is denoted as A, and K, M, and N represent 11-th, 13-th, and 14-th columns,
+#   respectively. (30 points)
+
+# Read in file 
+file = 'Datasets/housing_training.csv'
+housing_data = pd.read_csv(file, header=None)
+#print(housing_data)
+# Get data for boxplot      
+data_required = housing_data.iloc[:, [10, 12, 13]]
+#print(data_required)
+
+# Create boxplot
+fig, ax = plt.subplots()
+bplot = ax.boxplot(data_required, patch_artist=True)
+# Set colors
+colors =['blue', 'green', 'red']
+
+# Add title and labels
+plt.title('Boston Housing Data')
+plt.xticks([1, 2, 3], ['PTRATIO', 'LSTAT', 'MEDV'])
+plt.ylabel('Values')
+plt.xlabel('Attributes')
+# Set colors for boxplot
+for patch, color in zip(bplot['boxes'], colors):
+    patch.set_facecolor(color)
+plt.show()
+
+
+#   Task 3: Visualize and interpret the column of A (1st column) in the housing data using histogram. (30
+#   points)
+
+data_required = housing_data.iloc[:, 0]
+#print(data_required)
+plt.hist(data_required, bins=10, color='blue', edgecolor='black')
+plt.title('Histogram of CRIM in Housing Data')
+plt.xlabel('Per Capita Crime Rate by Town') 
+plt.ylabel('Frequency')
+plt.show()
